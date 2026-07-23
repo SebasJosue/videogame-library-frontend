@@ -1,21 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
-import {
-  Target,
-  Swords,
-  Map,
-  Compass,
-  Wand2,
-  Ghost,
-  Car,
-  Trophy,
-  Brain,
-  Gauge,
-  Palette,
-  Gamepad2,
-  Tag
-} from 'lucide-react';
+import { Target, Swords, Map, Compass, Wand2, Ghost, Car, Trophy, Brain, Gauge, Palette, Gamepad2, Tag } from 'lucide-react';
 
 interface Category {
   name: string;
@@ -24,21 +10,8 @@ interface Category {
   gameCount: number;
 }
 
-// Mapeo de nombres de iconos a componentes de Lucide
 const iconMap: Record<string, React.ElementType> = {
-  Target,
-  Swords,
-  Map,
-  Compass,
-  Wand2,
-  Ghost,
-  Car,
-  Trophy,
-  Brain,
-  Gauge,
-  Palette,
-  Gamepad2,
-  Tag,
+  Target, Swords, Map, Compass, Wand2, Ghost, Car, Trophy, Brain, Gauge, Palette, Gamepad2, Tag,
 };
 
 const Categories = () => {
@@ -61,8 +34,27 @@ const Categories = () => {
     }
   };
 
+  // ✅ CONVIerte el nombre de la categoría a la ruta correspondiente
+  const getCategoryRoute = (categoryName: string) => {
+    const routes: Record<string, string> = {
+      'Action-Adventure': '/games/action-adventure',
+      'Shooter': '/games/shooter',
+      'RPG': '/games/rpg',
+      'Aventura': '/games/aventura',
+      'Acción': '/games/accion',
+      'Terror': '/games/terror',
+      'Carreras': '/games/carreras',
+      'Deportes': '/games/deportes',
+      'Estrategia': '/games/estrategia',
+      'Simulación': '/games/simulacion',
+      'Indie': '/games/indie',
+    };
+    return routes[categoryName] || '/games';
+  };
+
   const handleCategoryClick = (categoryName: string) => {
-    navigate(`/games?genre=${encodeURIComponent(categoryName)}`);
+    const route = getCategoryRoute(categoryName);
+    navigate(route);
   };
 
   if (loading) {
@@ -91,12 +83,13 @@ const Categories = () => {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {categories.map((category) => {
               const IconComponent = iconMap[category.icon || 'Tag'] || Tag;
-              
               return (
                 <div
                   key={category.name}
                   onClick={() => handleCategoryClick(category.name)}
-                  className="rounded-xl p-6 shadow-2xl cursor-pointer transform hover:scale-105 transition-all duration-300 flex flex-col items-center justify-center text-white border-2 hover:border-white/50"
+                  className={`rounded-xl p-6 shadow-2xl cursor-pointer transform hover:scale-105 transition-all duration-300 flex flex-col items-center justify-center text-white border-2 hover:border-white/50 ${
+                    category.gameCount === 0 ? 'opacity-70' : ''
+                  }`}
                   style={{ backgroundColor: category.color || '#6366f1' }}
                 >
                   <IconComponent className="w-12 h-12 mb-3" />
@@ -104,6 +97,9 @@ const Categories = () => {
                   <p className="text-sm text-white/80">
                     {category.gameCount} {category.gameCount === 1 ? 'juego' : 'juegos'}
                   </p>
+                  {category.gameCount === 0 && (
+                    <p className="text-xs text-white/60 mt-2 italic">Sin reseñas</p>
+                  )}
                 </div>
               );
             })}

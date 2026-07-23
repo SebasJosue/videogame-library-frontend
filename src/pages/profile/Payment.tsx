@@ -4,7 +4,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import api from '../../services/api';
 import { useAuthStore } from '../../store/authStore';
-import { CreditCard, Lock, X, AlertCircle } from 'lucide-react';
+import { CreditCard, Lock, X, AlertCircle, CheckCircle } from 'lucide-react'; // ✅ Agregado CheckCircle
 
 // ✅ CLAVE PÚBLICA DE STRIPE
 const stripePromise = loadStripe('pk_test_51Tw4wdPlAEUIa30gaPGC3VzdorwWfaxdxMt5qDOjYsJFckLvZ2famT4uFDrglnAVdFvBoCq6XvFfjAEHfiDefc5K00MPjKVYmj');
@@ -181,6 +181,9 @@ const Payment = () => {
   const [planName, setPlanName] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>('');
+  
+  // ✅ NUEVO: Estado para controlar la pantalla de éxito
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
 
   useEffect(() => {
     const fetchPlanDetails = async () => {
@@ -258,9 +261,27 @@ const Payment = () => {
     fetchPlanDetails();
   }, [plan, navigate]);
 
+  // ✅ MODIFICADO: Mostrar mensaje de éxito y redirigir después de 3 segundos
   const handlePaymentSuccess = () => {
-    navigate('/profile');
+    setPaymentSuccess(true);
+    setTimeout(() => {
+      navigate('/profile');
+    }, 3000);
   };
+
+  // ✅ NUEVO: Pantalla de Pago Exitoso
+  if (paymentSuccess) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-900 to-purple-900 flex items-center justify-center">
+        <div className="text-center bg-gray-800 p-10 rounded-2xl border border-gray-700 shadow-2xl max-w-md w-full mx-4">
+          <CheckCircle className="w-20 h-20 text-green-500 mx-auto mb-6" />
+          <h2 className="text-3xl font-bold text-white mb-3">¡Pago Exitoso!</h2>
+          <p className="text-gray-300 mb-2">Tu suscripción ha sido activada correctamente.</p>
+          <p className="text-sm text-gray-400">Redirigiendo a tu perfil en 3 segundos...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
