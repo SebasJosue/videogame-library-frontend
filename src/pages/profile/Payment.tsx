@@ -7,7 +7,7 @@ import { useAuthStore } from '../../store/authStore';
 import { CreditCard, Lock, X, AlertCircle } from 'lucide-react';
 
 // ✅ CLAVE PÚBLICA DE STRIPE
-const stripePromise = loadStripe('pk_test_51Tw4wdPlAEUIa30gaPGC3VzdorwWfaxdxMt5qD0jYsJFckLvZ2faml4uFDrglnAVdFvBoCq6XVfFjAEHfiDefc5K00MPjkVYmj');
+const stripePromise = loadStripe('pk_test_51Tw4wdPlAEUIa30gaPGC3VzdorwWfaxdxMt5qDOjYsJFckLvZ2famT4uFDrglnAVdFvBoCq6XvFfjAEHfiDefc5K00MPjKVYmj');
 
 // Planes por defecto como fallback
 const defaultPlans: Record<string, number> = {
